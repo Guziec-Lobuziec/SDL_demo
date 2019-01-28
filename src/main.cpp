@@ -143,6 +143,41 @@ int main() {
 	.set_velocity(alg_vector<double>(0,0))
 	.set_acceleration(alg_vector<double>(0,0));
 
+	drawable rubbish(31,31);
+	rubbish.draw(draw_circle(15,15,15));
+
+	std::vector<std::tuple<point<double>,double>> rubbish_collision_map;
+
+	rubbish_collision_map.push_back(std::make_tuple(point<double>(15,15),15.0));
+
+	physics_recipient rubbish_phy1(
+		0.5,
+		point<double>(220,window_size.y()+50),
+		time_resolution,
+		rubbish_collision_map,
+		1,
+		0.0001,
+		false
+	);
+
+	rubbish_phy1
+	.set_velocity(alg_vector<double>(4,-55.5))
+	.set_acceleration(alg_vector<double>(0,3));
+
+	physics_recipient rubbish_phy2(
+		3,
+		point<double>(300,-50),
+		time_resolution,
+		rubbish_collision_map,
+		1,
+		0.0001,
+		false
+	);
+
+	rubbish_phy2
+	.set_velocity(alg_vector<double>(20,10))
+	.set_acceleration(alg_vector<double>(-3.5,1));
+
 	double cannon_angle = -45.0;
 	bool spaceHit = false;
 
@@ -169,6 +204,8 @@ int main() {
 
 		view.paste_to_renderer(renderer, point<int>(0,0));
 		ball.paste_to_renderer(renderer, (point<int>)ball_phy.get_position());
+		rubbish.paste_to_renderer(renderer, (point<int>)rubbish_phy1.get_position());
+		rubbish.paste_to_renderer(renderer, (point<int>)rubbish_phy2.get_position());
 		bucket.paste_to_renderer(renderer, (point<int>)bucket_phy.get_position());
 		cannon.paste_to_renderer(renderer, point<int>(-5,window_size.y() - 150), cannon_angle);
 
@@ -204,7 +241,32 @@ int main() {
 		}
 
 		ball_phy.compute_collisons(bucket_phy);
+		ball_phy.compute_collisons(rubbish_phy1);
+		ball_phy.compute_collisons(rubbish_phy2);
+		rubbish_phy1.compute_collisons(rubbish_phy2);
+		rubbish_phy1.compute_collisons(bucket_phy);
+		rubbish_phy2.compute_collisons(bucket_phy);
+
 		ball_phy.tick_physics();
+		rubbish_phy1.tick_physics();
+		rubbish_phy2.tick_physics();
+
+		if(ball_phy.get_position().y()-100 > window_size.y()) {
+			ball_phy.set_position(point<double>(75,window_size.y()-100))
+			.set_velocity(alg_vector<double>(0,0))
+			.set_acceleration(alg_vector<double>(0,0));
+		}
+
+		if(rubbish_phy1.get_position().y()-100 > window_size.y()) {
+			rubbish_phy1.set_position(point<double>(220,window_size.y()+50))
+			.set_velocity(alg_vector<double>(4,-55.5));
+		}
+
+		if(rubbish_phy2.get_position().y()-100 > window_size.y()) {
+			rubbish_phy2.set_position(point<double>(300,-50))
+			.set_velocity(alg_vector<double>(20,10));
+		}
+
 
 		SDL_Delay( ( int )( time_resolution / 1000 ) );
 
