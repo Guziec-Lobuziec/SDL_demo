@@ -119,6 +119,7 @@ int main() {
 		time_resolution,
 		collision_map3,
 		1,
+		0,
 		true
 	);
 
@@ -134,6 +135,7 @@ int main() {
 		time_resolution,
 		collision_map1,
 		1,
+		0.0005,
 		false
 	);
 
@@ -196,8 +198,8 @@ int main() {
 			spaceHit = false;
 			ball_phy.set_position(point<double>(75,window_size.y()-100))
 			.set_velocity(alg_vector<double>(
-				50.0*std::cos(cannon_angle*PI/180),
-				50.0*std::sin(cannon_angle*PI/180)
+				60.0*std::cos(cannon_angle*PI/180),
+				60.0*std::sin(cannon_angle*PI/180)
 			)).set_acceleration(alg_vector<double>(0,3));
 		}
 

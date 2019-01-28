@@ -17,6 +17,7 @@ public:
     double time_resolution,
     std::vector<std::tuple<point<double>,double>> collision_map,
     double coefficient_of_restitution,
+    double drag_amplitude,
     bool infinite_mass
   );
 
@@ -44,6 +45,7 @@ private:
   double _time_resolution;
   double _coefficient_of_restitution;
   std::vector<std::tuple<point<double>,double>> _collision_map;
+  double _drag_amplitude;
   bool _infinite_mass;
 
 };

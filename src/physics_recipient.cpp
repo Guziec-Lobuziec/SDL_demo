@@ -6,6 +6,7 @@ physics_recipient::physics_recipient(
   double time_resolution,
   std::vector<std::tuple<point<double>,double>> collision_map,
   double coefficient_of_restitution,
+  double drag_amplitude,
   bool infinite_mass
 ):
 _mass(mass),
@@ -15,6 +16,7 @@ _velocity(alg_vector<double>(0,0)),
 _position(position),
 _time_resolution(time_resolution),
 _coefficient_of_restitution(coefficient_of_restitution),
+_drag_amplitude(drag_amplitude),
 _infinite_mass(infinite_mass)
 {
 }
@@ -49,7 +51,7 @@ physics_recipient& physics_recipient::set_acceleration(const alg_vector<double>&
 physics_recipient& physics_recipient::tick_physics() {
 
   if(!_infinite_mass) {
-    _velocity = _velocity + _acceleration*_time_resolution;
+    _velocity = _velocity*(1-_drag_amplitude) + _acceleration*_time_resolution;
     _position = _position + _velocity*_time_resolution;
   }
 
